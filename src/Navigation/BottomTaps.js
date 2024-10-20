@@ -21,7 +21,6 @@ function MyTabs() {
             iconName = focused ? 'home' : 'home-outline';
           }
 
-          // Return the appropriate icon component from Ionicons
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: 'tomato',

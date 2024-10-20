@@ -33,7 +33,8 @@ export default function Login() {
   });
 
   const handleSubmit = values => {
-    console.log('Form values:', values);
+    // console.log('Form values:', values);
+    navigation.navigate('Home')
   };
 
   return (
@@ -135,7 +136,25 @@ export default function Login() {
                 </>
               )}
             </Formik>
+            <View style={{ flexDirection: 'row', alignItems: 'center',margin:height(2) }}>
+
+        <Text style={{color:Constant.Colors.server}}>
+        If you don't have an account,
+        </Text>
+
+        <TouchableOpacity
+        onPress={()=>{
+          navigation.navigate('Register')
+        }}
+        >
+          <Text style={{color:Constant.Colors.purple,marginRight:width(1),fontWeight:'700'}}>
+            Register now
+          </Text>
+        </TouchableOpacity>
+
+        </View>
           </View>
+
         </ScrollView>
       </KeyboardAvoidingView>
     </PaperProvider>
