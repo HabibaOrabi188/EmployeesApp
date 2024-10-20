@@ -3,6 +3,7 @@ import { Text, View, ScrollView,Image } from 'react-native';
 import { Button } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from './homeStyle';
+import Constant from '../../Constant/Constant';
 
 function Home() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -65,17 +66,17 @@ function Home() {
 
       <View style={styles.statsRow}>
         <View style={styles.statCardLeft}>
-          <Text style={styles.statCardTextRight}>الحضور</Text>
-          <Text style={[styles.statCardNumber,{color:"#347928"}]}>17</Text>
+          <Text style={[styles.statCardTextRight,styles.attend]}>الحضور</Text>
+          <Text style={[styles.statCardNumber,styles.attend]}>17</Text>
         </View>
         <View style={styles.statCardRight}>
           <View style={styles.delayCard}>
-            <Text style={styles.statCardTextRight}>ايام التاخير</Text>
-            <Text style={[styles.statCardNumber,{color:"#FCCD2A"}]}>03</Text>
+            <Text style={[styles.statCardTextRight,styles.late]}>ايام التاخير</Text>
+            <Text style={[styles.statCardNumber,styles.late]}>03</Text>
           </View>
           <View style={styles.absenceCard}>
-            <Text style={styles.statCardTextRight}>ايام الغياب</Text>
-            <Text style={[styles.statCardNumber,{color:"red"}]}>01</Text>
+            <Text style={[styles.statCardTextRight,styles.absent]}>ايام الغياب</Text>
+            <Text style={[styles.statCardNumber,styles.absent]}>01</Text>
           </View>
         </View>
       </View>

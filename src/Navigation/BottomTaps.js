@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../Components/Home/home';
 import { Ionicons } from 'react-native-vector-icons'; // Import Ionicons
+import Reports from '../Components/Reports/reports';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,7 +29,7 @@ function MyTabs() {
         tabBarInactiveTintColor: 'gray',
       })} >
       <Tab.Screen name="القائمة"  component={Home} />
-      <Tab.Screen name="التقارير"  component={Home}/>
+      <Tab.Screen name="التقارير"  component={Reports}/>
       <Tab.Screen name="الطلبات"  component={Home}/>
       <Tab.Screen name="الرئيسية" component={Home} />
     </Tab.Navigator>
