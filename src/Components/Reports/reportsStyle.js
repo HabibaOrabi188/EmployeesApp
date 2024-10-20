@@ -89,6 +89,8 @@ const styles = StyleSheet.create({
     statusBox: {
       borderRadius: 15,
       padding: 10,
+      width:"18%",
+      alignItems:"center"
     },
     attendanceStatus: {
       backgroundColor: Constant.Colors.attendBackground,
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
       backgroundColor: Constant.Colors.lateBackground,
     },
     attend:{
-        color:Constant.Colors.green
+        color:Constant.Colors.green,
     },
     absent:{
         color:Constant.Colors.red

@@ -29,53 +29,55 @@ function Home() {
     <ScrollView style={styles.container}>
 
       <View style={styles.header}>
+        <Text style={styles.headerTitle}>Home</Text>
         <Ionicons name="notifications-outline" size={25} />
-        <Text style={styles.headerTitle}>الرئيسية</Text>
       </View>
       <View style={styles.header2}>
-      <View>
-        <Text>صباح الخير - عبد العزيز</Text>
-        <Text>مصمم واجهات الاستخدام</Text>
-      </View>
-       <Image
+      <Image
          source={require('../../Assets/images/profile.png')}
           style={styles.profileImage} 
       />
+      <View>
+        <Text>Good Morning - Abdulaziz</Text>
+        <Text>UI Designer  </Text>
+      </View>
+      
       </View>
 
 
 
 
       <View style={styles.timeSection}>
-        <Text style={styles.timeText}>08:07:00 AM 2021-الثلاثاء 23 سبتمبر</Text>
+        <Text style={styles.timeText}>08:07:00 AM Tuesday 23 September 2021</Text>
         <Text style={styles.timeText}>{formattedTime}</Text>
 
         <View style={styles.buttonsRow}>
+          
+          <Button mode="contained" onPress={() => console.log('Pressed')} contentStyle={styles.exitButtonContent} labelStyle={styles.exitButtonLabel}>
+          Exit
+          </Button>
           <Button mode="contained" onPress={() => console.log('Pressed')} contentStyle={styles.cafeButtonContent} style={styles.cafeButton}>
             <Ionicons name="cafe-outline" size={20} />
           </Button>
-          <Button mode="contained" onPress={() => console.log('Pressed')} contentStyle={styles.exitButtonContent} labelStyle={styles.exitButtonLabel}>
-            انصراف
-          </Button>
         </View>
 
-        <Text style={styles.breakText}>الوقت مناسب لاخذ الاستراحة-تمتع بوقتك</Text>
+        <Text style={styles.breakText}>It's a good time to take a break - Enjoy your time</Text>
       </View>
 
-      <Text style={styles.statsTitle}>احصائيات الشهر الحالى</Text>
+      <Text style={styles.statsTitle}>Current Month Statistics</Text>
 
       <View style={styles.statsRow}>
         <View style={styles.statCardLeft}>
-          <Text style={[styles.statCardTextRight,styles.attend]}>الحضور</Text>
+          <Text style={[styles.statCardTextRight,styles.attend]}>Attendance</Text>
           <Text style={[styles.statCardNumber,styles.attend]}>17</Text>
         </View>
         <View style={styles.statCardRight}>
           <View style={styles.delayCard}>
-            <Text style={[styles.statCardTextRight,styles.late]}>ايام التاخير</Text>
+            <Text style={[styles.statCardTextRight,styles.late]}> Days of Tardiness</Text>
             <Text style={[styles.statCardNumber,styles.late]}>03</Text>
           </View>
           <View style={styles.absenceCard}>
-            <Text style={[styles.statCardTextRight,styles.absent]}>ايام الغياب</Text>
+            <Text style={[styles.statCardTextRight,styles.absent]}>Days of Absence</Text>
             <Text style={[styles.statCardNumber,styles.absent]}>01</Text>
           </View>
         </View>

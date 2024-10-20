@@ -56,7 +56,7 @@ function Reports() {
           <Text>09 Thursday</Text>
         </View>
         <View style={[styles.statusBox, styles.attendanceStatus]}>
-          <Text>attend</Text>
+          <Text style={styles.attend}>attend</Text>
         </View>
       </View>
 
@@ -65,7 +65,7 @@ function Reports() {
           <Text>08 Wednesday</Text>
         </View>
         <View style={[styles.statusBox, styles.absentStatus]}>
-          <Text>absent</Text>
+          <Text style={styles.absent}>absent</Text>
         </View>
       </View>
 
@@ -74,7 +74,7 @@ function Reports() {
           <Text>07 Tuesday</Text>
         </View>
         <View style={[styles.statusBox, styles.lateStatus]}>
-          <Text>late</Text>
+          <Text style={styles.late}>late</Text>
         </View>
       </View>
     </ScrollView>

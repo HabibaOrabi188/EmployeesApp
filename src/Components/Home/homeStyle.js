@@ -17,7 +17,6 @@ import Constant from "../../Constant/Constant";
     },
     header2:{
         flexDirection:"row",
-         justifyContent: 'flex-end',
           marginVertical: 10,
            alignItems: 'center'
     },
@@ -38,7 +37,7 @@ import Constant from "../../Constant/Constant";
     },
     timeText: {
       color: 'white',
-      fontSize: 18,
+      fontSize: 16,
     },
     buttonsRow: {
       flexDirection: 'row',
@@ -61,10 +60,9 @@ import Constant from "../../Constant/Constant";
     },
     breakText: {
       color: 'white',
-      fontSize: 18,
+      fontSize: 16,
     },
     statsTitle: {
-      textAlign: 'right',
       fontSize: 18,
     },
     statsRow: {
@@ -89,12 +87,13 @@ import Constant from "../../Constant/Constant";
     },
     statCardTextRight: {
       fontSize: 16,
-      alignSelf: 'flex-end',
+
       fontWeight:"bold"
     },
     statCardNumber: {
       fontSize: 20,
-      fontWeight:"bold"
+      fontWeight:"bold",
+      alignSelf: 'flex-end',
     },
     delayCard: {
       backgroundColor: Constant.Colors.lateBackground,
