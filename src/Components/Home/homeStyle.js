@@ -1,8 +1,8 @@
 import { StyleSheet } from "react-native";
+import Constant from "../../Constant/Constant";
  const styles = StyleSheet.create({
     container: {
-      paddingHorizontal: 10,
-      backgroundColor:"white"
+      backgroundColor:Constant.Colors.white
     },
     header: {
       flexDirection: 'row',
@@ -16,7 +16,6 @@ import { StyleSheet } from "react-native";
     },
     header2:{
         flexDirection:"row",
-         justifyContent: 'flex-end',
           marginVertical: 10,
            alignItems: 'center'
     },
@@ -26,7 +25,7 @@ import { StyleSheet } from "react-native";
         borderRadius: 30, // Circular image
       },
     timeSection: {
-      backgroundColor: '#D91656',
+      backgroundColor: Constant.Colors.pink,
       paddingVertical: 40,
       paddingHorizontal:20,
       borderRadius: 10,
@@ -37,7 +36,7 @@ import { StyleSheet } from "react-native";
     },
     timeText: {
       color: 'white',
-      fontSize: 18,
+      fontSize: 16,
     },
     buttonsRow: {
       flexDirection: 'row',
@@ -60,10 +59,9 @@ import { StyleSheet } from "react-native";
     },
     breakText: {
       color: 'white',
-      fontSize: 18,
+      fontSize: 16,
     },
     statsTitle: {
-      textAlign: 'right',
       fontSize: 18,
     },
     statsRow: {
@@ -72,7 +70,7 @@ import { StyleSheet } from "react-native";
       marginBottom:100
     },
     statCardLeft: {
-      backgroundColor: '#C7FFD8',
+      backgroundColor: Constant.Colors.attendBackground,
       justifyContent: 'center',
       width: '48%',
       height:'45%',
@@ -88,15 +86,16 @@ import { StyleSheet } from "react-native";
     },
     statCardTextRight: {
       fontSize: 16,
-      alignSelf: 'flex-end',
+
       fontWeight:"bold"
     },
     statCardNumber: {
       fontSize: 20,
-      fontWeight:"bold"
+      fontWeight:"bold",
+      alignSelf: 'flex-end',
     },
     delayCard: {
-      backgroundColor: '#FADFA1',
+      backgroundColor: Constant.Colors.lateBackground,
       justifyContent: 'center',
       padding: 10,
       height:'30%',
@@ -104,11 +103,20 @@ import { StyleSheet } from "react-native";
       borderRadius: 10,
     },
     absenceCard: {
-      backgroundColor: '#FF7777',
+      backgroundColor: Constant.Colors.absentBackground,
       justifyContent: 'center',
       height:'30%',
       padding: 10,
       borderRadius: 10,
+    },
+    attend:{
+      color:Constant.Colors.green
+    },
+    absent:{
+      color:Constant.Colors.red
+    },
+    late:{
+      color:Constant.Colors.late 
     },
   });
   export default styles
