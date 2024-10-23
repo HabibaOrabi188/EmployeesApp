@@ -17,7 +17,7 @@ const MainStack = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{headerShown: false}} 
-        initialRouteName={'Requests'}>
+        initialRouteName={'Register'}>
         <Stack.Screen name={'Splash'} component={SplashScreen} />
         <Stack.Screen name={'Introo'} component={Introo} />
         <Stack.Screen name={'Login'} component={Login} />

@@ -4,14 +4,8 @@ import { Button } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 
 function ManagerHome() {
-
-
- 
-
   return (
-    <ScrollView>
-   
-     
+    <ScrollView>  
     </ScrollView>
   );
 }

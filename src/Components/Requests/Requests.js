@@ -13,7 +13,7 @@ import Constant from '../../Constant/Constant';
 import { Modal, PaperProvider, Portal } from 'react-native-paper';
 import CreateRequest from './CreateRequest';
 import { db } from '../../../Firebase/Firebase'; 
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 
 export default function Requests() {
   const navigation = useNavigation();
@@ -31,18 +31,23 @@ export default function Requests() {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'Employees'));
-        const employeeData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        // setRequests(employeeData); // Set the fetched data to state
-        console.log(employeeData)
+        const fetchRequests = async () => {
+          const docRef = doc(db, "Employees", "1XsX7QM1MSRYZFHdJxHS");
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            console.log("Document data:", docSnap.data());
+            // You can now update your state here if needed
+            // setRequests(docSnap.data());
+          } else {
+            // docSnap.data() will be undefined in this case
+            console.log("No such document!");
+          }}
+        
       } catch (error) {
         console.error("Error fetching employee data: ", error);
       }
     };
-
+  
     fetchRequests(); // Fetch data when component mounts
   }, []);
   
