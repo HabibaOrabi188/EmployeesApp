@@ -9,6 +9,10 @@ import MyTabs from './BottomTaps';
 import Register from '../Components/Register/Register';
 import ManagerHome from '../Components/ManagerHome/ManagerHome';
 import CreateRequest from '../Components/Requests/CreateRequest';
+import ProfileMenu from '../Components/ProfileMenu/ProfileMenu';
+import ContactUs from '../Components/ContactUs/ContactUs';
+import Privacy from '../Components/Privacy/Privacy';
+import AboutUs from '../Components/AboutUs/AboutUs';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,15 +21,18 @@ const MainStack = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{headerShown: false}} 
-        initialRouteName={'Register'}>
+        initialRouteName={'ProfileMenu'}>
         <Stack.Screen name={'Splash'} component={SplashScreen} />
         <Stack.Screen name={'Introo'} component={Introo} />
         <Stack.Screen name={'Login'} component={Login} />
         <Stack.Screen name={'Register'} component={Register} />
         <Stack.Screen name={'ManagerHome'} component={ManagerHome} />
-        <Stack.Screen name={'Requests'} component={MyTabs} />
+        {/* <Stack.Screen name={'Requests'} component={MyTabs} /> */}
         <Stack.Screen name={'CreateRequest'} component={CreateRequest} />
-        <Stack.Screen name={'Home'} component={MyTabs} /> 
+        <Stack.Screen name={'ProfileMenu'} component={MyTabs} /> 
+        <Stack.Screen name={'ContactUs'} component={ContactUs} />
+        <Stack.Screen name={'Privacy'} component={Privacy} />
+        <Stack.Screen name={'AboutUs'} component={AboutUs} />
       </Stack.Navigator>
     </NavigationContainer>
   );

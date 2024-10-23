@@ -4,20 +4,18 @@ import { getFirestore } from "firebase/firestore";
 
 // Firebase configuration (use your own config keys)
 const firebaseConfig = {
-  apiKey: "AIzaSyBkVaxSXJkT2-BfGUQ2m6C06dGfW4Kcg0o",
-  authDomain: "employees-f5155.firebaseapp.com",
-  databaseURL: "https://employees-f5155-default-rtdb.firebaseio.com",
-  projectId: "employees-f5155",
-  storageBucket: "employees-f5155.appspot.com",
-  messagingSenderId: "134883143019",
-  appId: "1:134883143019:web:1249e0532d8b7b4cd6b02e"
+  apiKey: "AIzaSyC5mO3aCos2AIHx7ob3NtKF6MGZiyB38Iw",
+  authDomain: "employees-78e3e.firebaseapp.com",
+  projectId: "employees-78e3e",
+  storageBucket: "employees-78e3e.appspot.com",
+  messagingSenderId: "835385420985",
+  appId: "1:835385420985:web:98e28455eba014c007ff68",
+  measurementId: "G-11PXVRVC6M"
 };
 
-// Initialize Firebase App
 const app = initializeApp(firebaseConfig);
 
 
 const db = getFirestore(app);
 
-// Export auth and db
 export { db };

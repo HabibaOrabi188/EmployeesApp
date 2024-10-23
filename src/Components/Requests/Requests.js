@@ -31,25 +31,20 @@ export default function Requests() {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const fetchRequests = async () => {
-          const docRef = doc(db, "Employees", "1XsX7QM1MSRYZFHdJxHS");
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data());
-            // You can now update your state here if needed
-            // setRequests(docSnap.data());
-          } else {
-            // docSnap.data() will be undefined in this case
-            console.log("No such document!");
-          }}
-        
+        const querySnapshot = await getDocs(collection(db, 'Employees'));
+        const employeeData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log(employeeData);
       } catch (error) {
         console.error("Error fetching employee data: ", error);
       }
     };
   
-    fetchRequests(); // Fetch data when component mounts
+    fetchRequests();
   }, []);
+  
   
   return (
     <PaperProvider>
@@ -58,11 +53,7 @@ export default function Requests() {
 
         {requests.type ? (
           <View style={{ flex: 1, alignItems: 'center' }}>
-            <Animatable.Image
-              source={require('../../Assets/images/waiting.png')}
-              style={{
                 width: width(90),
-                height: height(50),
                 marginTop: height(6),
               }}
               resizeMode="stretch"
