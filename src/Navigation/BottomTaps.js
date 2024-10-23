@@ -4,6 +4,7 @@ import { Ionicons } from 'react-native-vector-icons'; // Import Ionicons
 import Reports from '../Components/Reports/reports';
 import Constant from '../Constant/Constant';
 import Requests from '../Components/Requests/Requests';
+import ProfileMenu from '../Components/ProfileMenu/ProfileMenu';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +35,7 @@ function MyTabs() {
 
       <Tab.Screen name="Reports"  component={Reports}/>
       <Tab.Screen name="Requests"  component={Requests}/>
-      <Tab.Screen name="Menu"  component={Home} />
+      <Tab.Screen name="Menu"  component={ProfileMenu} />
     </Tab.Navigator>
   );
 }

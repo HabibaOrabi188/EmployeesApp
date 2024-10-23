@@ -36,15 +36,15 @@ export default function Requests() {
           id: doc.id,
           ...doc.data(),
         }));
-        // setRequests(employeeData); // Set the fetched data to state
-        console.log(employeeData)
+        console.log(employeeData);
       } catch (error) {
         console.error("Error fetching employee data: ", error);
       }
     };
-
-    fetchRequests(); // Fetch data when component mounts
+  
+    fetchRequests();
   }, []);
+  
   
   return (
     <PaperProvider>
