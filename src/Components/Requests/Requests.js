@@ -13,7 +13,7 @@ import Constant from '../../Constant/Constant';
 import { Modal, PaperProvider, Portal } from 'react-native-paper';
 import CreateRequest from './CreateRequest';
 import { db } from '../../../Firebase/Firebase'; 
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 
 export default function Requests() {
   const navigation = useNavigation();
@@ -53,7 +53,11 @@ export default function Requests() {
 
         {requests.type ? (
           <View style={{ flex: 1, alignItems: 'center' }}>
+            <Animatable.Image
+              source={require('../../Assets/images/waiting.png')}
+              style={{
                 width: width(90),
+                height: height(50),
                 marginTop: height(6),
               }}
               resizeMode="stretch"
@@ -111,9 +115,7 @@ export default function Requests() {
               }}
             >
               There aren't requests yet
-            </Text>
-
-            <TouchableOpacity
+            </Text><TouchableOpacity
               onPress={showModal}
               style={{
                 width: width(60),
