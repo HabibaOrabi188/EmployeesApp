@@ -12,20 +12,40 @@ import Header from '../Header';
 import Constant from '../../Constant/Constant';
 import { Modal, PaperProvider, Portal } from 'react-native-paper';
 import CreateRequest from './CreateRequest';
+import { db } from '../../../Firebase/Firebase'; 
+import { collection, getDocs } from 'firebase/firestore';
 
 export default function Requests() {
   const navigation = useNavigation();
   const [requests, setRequests] = useState({});
-  const [visible, setVisible] = useState(false); 
+  const [visible, setVisible] = useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
   const handleRequest = (request) => {
-    setRequests(request); 
-    hideModal(); 
+    setRequests(request);
+    hideModal();
   };
 
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'Employees'));
+        const employeeData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        // setRequests(employeeData); // Set the fetched data to state
+        console.log(employeeData)
+      } catch (error) {
+        console.error("Error fetching employee data: ", error);
+      }
+    };
+
+    fetchRequests(); // Fetch data when component mounts
+  }, []);
+  
   return (
     <PaperProvider>
       <View style={{ flex: 1 }}>
@@ -33,32 +53,33 @@ export default function Requests() {
 
         {requests.type ? (
           <View style={{ flex: 1, alignItems: 'center' }}>
-            <Animatable.Image 
-              source={require('../../Assets/images/waiting.png')} 
+            <Animatable.Image
+              source={require('../../Assets/images/waiting.png')}
               style={{
                 width: width(90),
                 height: height(50),
                 marginTop: height(6),
               }}
-              resizeMode='stretch'
+              resizeMode="stretch"
             />
-            <Text style={{
-        fontSize:totalSize(3),
-        fontWeight:'600',
-        margin:height(-5),
-        textAlign:'center',
-        color:Constant.Colors.server,
-        marginHorizontal:width(2)
-       }}
-       >I need take{
-       requests.type==='Vacation'?' '+requests.type+' leave from '+requests.startDate+' to '+requests.endDate
-       :
-      ' '+requests.type+' to leave new '
+            <Text
+              style={{
+                fontSize: totalSize(3),
+                fontWeight: '600',
+                margin: height(-5),
+                textAlign: 'center',
+                color: Constant.Colors.server,
+                marginHorizontal: width(2),
+              }}
+            >
+              I need to take
+              {requests.type === 'Vacation'
+                ? ' ' + requests.type + ' leave from ' + requests.startDate + ' to ' + requests.endDate
+                : ' ' + requests.type + ' to leave new'}
+            </Text>
 
-       }</Text>
-            
             <TouchableOpacity
-              onPress={() => setRequests({})} // Pass a function to update state
+              onPress={() => setRequests({})}
               style={{
                 width: width(60),
                 height: height(5),
@@ -76,24 +97,28 @@ export default function Requests() {
           </View>
         ) : (
           <View style={{ flex: 1, alignItems: 'center' }}>
-            <Animatable.Image 
-              source={images.Empty} 
+            <Animatable.Image
+              source={images.Empty}
               style={{
                 width: width(70),
                 height: height(60),
                 marginTop: height(3),
                 marginBottom: height(-3),
               }}
-              resizeMode='contain'
+              resizeMode="contain"
             />
-            <Text style={{
-              marginTop:height(-7),
-              color:Constant.Colors.server,
-              fontSize:totalSize(2.4)
-              }}>There aren't requests yet</Text>
-            
+            <Text
+              style={{
+                marginTop: height(-7),
+                color: Constant.Colors.server,
+                fontSize: totalSize(2.4),
+              }}
+            >
+              There aren't requests yet
+            </Text>
+
             <TouchableOpacity
-              onPress={showModal} 
+              onPress={showModal}
               style={{
                 width: width(60),
                 height: height(5),
@@ -113,9 +138,9 @@ export default function Requests() {
       </View>
 
       <Portal>
-        <Modal 
-          visible={visible} 
-          onDismiss={hideModal} 
+        <Modal
+          visible={visible}
+          onDismiss={hideModal}
           contentContainerStyle={{
             padding: 20,
             alignSelf: 'center',
