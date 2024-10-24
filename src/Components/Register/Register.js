@@ -1,197 +1,224 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
-import { auth, db } from "../../../Firebase/Firebase";
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react/self-closing-comp */
 import {
-  KeyboardAvoidingView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-  Alert,
-} from "react-native";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
-import { useNavigation } from "@react-navigation/native";
-import { TextInput } from "react-native-paper";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { width, height, totalSize } from "react-native-dimension";
-import Constant from "../../Constant/Constant";
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View,
+  } from 'react-native';
+  import { useNavigation } from '@react-navigation/native';
+  import * as Animatable from 'react-native-animatable';
+  import images from '../../Constant/Images';
+  import * as Yup from 'yup';
+  import { PaperProvider, TextInput } from 'react-native-paper';
+  import { width, height, totalSize } from 'react-native-dimension';
+  import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+  import { Formik } from 'formik';
+  import Constant from '../../Constant/Constant';
+  import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+  import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Define your validation schema
-const validationSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required").min(3, "Name must be at least 3 characters"),
-  email: Yup.string().email("Invalid email address").required("Email is required"),
-  phoneNumber: Yup.string()
-    .matches(/^01[0-5]\d{8}$/, "Phone number must start with '01' followed by a digit from 0 to 5 and be 11 digits long")
-    .required("Phone number is required"),
-  password: Yup.string()
-    .matches(/^(?=.*[A-Z])(?=.*\W)(?=.*[0-9]).{8,16}$/, "Password must contain at least one number, one special character, and one uppercase letter")
-    .required("Password is required"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords must match")
-    .required("Confirm password is required"),
-});
+  export default function Register() {
+    const navigation = useNavigation();
 
-const Register = () => {
-  const navigation = useNavigation();
+    const validationSchema = Yup.object().shape({
+        email: Yup.string().email('Email is invalid').required('Email is required'),
+        phone: Yup.string()
+            .matches(/^[0-9]{11}$/, 'Phone number must be 11 digits')
+            .required('Phone number is required'),
+        password: Yup.string()
+            .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/, 'Password must be at least 6 characters, including letters and numbers')
+            .required('Password is required'),
+        confirmPassword: Yup.string()
+            .oneOf([Yup.ref('password'), null], 'Passwords must match')
+            .required('Confirm Password is required'),
+    });
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors, isValid },
-    trigger,
-    watch,
-    register,
-  } = useForm({
-    resolver: yupResolver(validationSchema),
-    mode: "onChange",
-  });
+    const handleSubmit = async (values) => {
+      const auth = getAuth();
+      try {
+        // Create user with email and password
+        const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+        const user = userCredential.user;
 
-  const checkUsernameExists = async (username) => {
-    const usersRef = collection(db, "users");
-    const q = query(usersRef, where("username", "==", username));
-    const querySnapshot = await getDocs(q);
-    return !querySnapshot.empty;
-  };
+        // Store user token in AsyncStorage
+        await AsyncStorage.setItem('userToken', user.uid);
 
-  const onHandleSubmit = async (data) => {
-    try {
-      const usernameExists = await checkUsernameExists(data.name);
-      if (usernameExists) {
-        Alert.alert("Username already exists", "Please choose a different username.");
-        return;
+        // Navigate to the Home screen
+        navigation.navigate('Home');
+      } catch (error) {
+        console.log('Error during registration:', error);
+        alert('Registration failed. Please try again.');
       }
+    };
 
-      await createUserWithEmailAndPassword(auth, data.email, data.password);
-      const user = auth.currentUser;
-      if (user) {
-        await setDoc(doc(db, "users", user.uid), {
-          username: data.name,
-          phoneNum: data.phoneNumber,
-          userEmail: data.email,
-        });
-      }
-      Alert.alert("Success", "User Registered Successfully!", [
-        {
-          text: "OK",
-          onPress: () => navigation.navigate("Login"),
-        },
-      ]);
-    } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
-        Alert.alert("Error", "This email is already registered. Please log in.");
-      } else {
-        Alert.alert("Error", error.message);
-      }
-    }
-  };
-
-  return (
-    <ScrollView>
-      <KeyboardAvoidingView style={{ flex: 1, paddingHorizontal: width(5), paddingTop: height(5) }}>
-        <Text style={{ fontSize: totalSize(4), textAlign: "center", marginBottom: height(4) }}>Register</Text>
-
-        <View style={{ marginBottom: height(2) }}>
-          <TextInput
-            label="Name"
-            mode="outlined"
-            style={{ marginBottom: height(2) }}
-            error={!!errors.name}
-            {...register("name")}
-            onChangeText={(value) => {
-              trigger("name");
-              setValue("name", value);
-            }}
+    return (
+      <ScrollView>
+        <View style={{ flex: 1, alignItems: 'center', paddingTop: height(2) }}>
+          <Animatable.Image
+              source={images.logo}
+              animation="zoomIn"
+              style={{ width: width(100), height: height(35) }}
+              duration={4000}
           />
-          {errors.name && <Text style={{ color: "red" }}>{errors.name.message}</Text>}
+          <Formik
+              initialValues={{ email: '', phone: '', password: '', confirmPassword: '' }}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}>
+              {({
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  values,
+                  errors,
+                  touched,
+              }) => (
+                  <>
+                      <TextInput
+                          placeholder="Enter your email"
+                          label="Email"
+                          mode="outlined"
+                          value={values.email}
+                          onChangeText={handleChange('email')}
+                          onBlur={handleBlur('email')}
+                          style={{
+                              width: width(90),
+                              height: height(7),
+                              marginTop: height(-6),
+                              borderRadius: 20,
+                          }}
+                      />
+                      {touched.email && errors.email ? (
+                          <View style={{ width: width(90) }}>
+                              <Text style={{ color: 'red', marginBottom: height(1) }}>
+                                  {errors.email}
+                              </Text>
+                          </View>
+                      ) : null}
+
+                      <TextInput
+                          placeholder="Enter your phone number"
+                          label="Phone"
+                          mode="outlined"
+                          value={values.phone}
+                          onChangeText={handleChange('phone')}
+                          onBlur={handleBlur('phone')}
+                          style={{
+                              width: width(90),
+                              height: height(7),
+                              marginTop: height(2),
+                              borderRadius: 20,
+                          }}
+                      />
+                      {touched.phone && errors.phone ? (
+                          <View style={{ width: width(90) }}>
+                              <Text style={{ color: 'red', marginBottom: height(1) }}>
+                                  {errors.phone}
+                              </Text>
+                          </View>
+                      ) : null}
+
+                      <TextInput
+                          style={{
+                              width: width(90),
+                              height: height(7),
+                              marginTop: height(2.6),
+                          }}
+                          mode="outlined"
+                          label="Password"
+                          placeholder="Enter your password"
+                          value={values.password}
+                          onChangeText={handleChange('password')}
+                          onBlur={handleBlur('password')}
+                          secureTextEntry
+                          right={
+                              <TouchableOpacity>
+                                  <MaterialCommunityIcons
+                                      name="lock"
+                                      size={24}
+                                      color="#f00"
+                                  />
+                              </TouchableOpacity>
+                          }
+                      />
+                      {touched.password && errors.password ? (
+                          <View style={{ width: width(90) }}>
+                              <Text style={{ color: 'red', marginBottom: height(1) }}>
+                                  {errors.password}
+                              </Text>
+                          </View>
+                      ) : null}
+
+                      <TextInput
+                          style={{
+                              width: width(90),
+                              height: height(7),
+                              marginTop: height(2.6),
+                          }}
+                          mode="outlined"
+                          label="Confirm Password"
+                          placeholder="Confirm your password"
+                          value={values.confirmPassword}
+                          onChangeText={handleChange('confirmPassword')}
+                          onBlur={handleBlur('confirmPassword')}
+                          secureTextEntry
+                          right={
+                              <TouchableOpacity>
+                                  <MaterialCommunityIcons
+                                      name="lock"
+                                      size={24}
+                                      color="#f00"
+                                  />
+                              </TouchableOpacity>
+                          }
+                      />
+                      {touched.confirmPassword && errors.confirmPassword ? (
+                          <View style={{ width: width(90) }}>
+                              <Text style={{ color: 'red', marginBottom: height(1) }}>
+                                  {errors.confirmPassword}
+                              </Text>
+                          </View>
+                      ) : null}
+
+                      <TouchableOpacity
+                          style={{
+                              width: width(70),
+                              height: height(6),
+                              backgroundColor: Constant.Colors.purple,
+                              marginTop: height(3),
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              borderRadius: 15,
+                          }}
+                          onPress={handleSubmit}>
+                          <Text
+                              style={{
+                                  color: Constant.Colors.rose,
+                                  fontSize: totalSize(3),
+                              }}>
+                              Register
+                          </Text>
+                      </TouchableOpacity>
+                  </>
+              )}
+          </Formik>
+          <View style={{ flexDirection: 'row', alignItems: 'center', margin: height(2) }}>
+            <Text style={{ color: Constant.Colors.server }}>
+              If you have an account,
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Login');
+              }}>
+              <Text style={{ color: Constant.Colors.purple, marginRight: width(1), fontWeight: '700' }}>
+                Login now
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
-        <View style={{ marginBottom: height(2) }}>
-          <TextInput
-            label="Email"
-            mode="outlined"
-            style={{ marginBottom: height(2) }}
-            error={!!errors.email}
-            {...register("email")}
-            onChangeText={(value) => {
-              trigger("email");
-              setValue("email", value);
-            }}
-          />
-          {errors.email && <Text style={{ color: "red" }}>{errors.email.message}</Text>}
-        </View>
-
-        <View style={{ marginBottom: height(2) }}>
-          <TextInput
-            label="Phone Number"
-            mode="outlined"
-            style={{ marginBottom: height(2) }}
-            error={!!errors.phoneNumber}
-            {...register("phoneNumber")}
-            onChangeText={(value) => {
-              trigger("phoneNumber");
-              setValue("phoneNumber", value);
-            }}
-          />
-          {errors.phoneNumber && <Text style={{ color: "red" }}>{errors.phoneNumber.message}</Text>}
-        </View>
-
-        <View style={{ marginBottom: height(2) }}>
-          <TextInput
-            label="Password"
-            mode="outlined"
-            secureTextEntry
-            style={{ marginBottom: height(2) }}
-            error={!!errors.password}
-            {...register("password")}
-            onChangeText={(value) => {
-              trigger("password");
-              setValue("password", value);
-            }}
-          />
-          {errors.password && <Text style={{ color: "red" }}>{errors.password.message}</Text>}
-        </View>
-
-        <View style={{ marginBottom: height(2) }}>
-          <TextInput
-            label="Confirm Password"
-            mode="outlined"
-            secureTextEntry
-            style={{ marginBottom: height(2) }}
-            error={!!errors.confirmPassword}
-            {...register("confirmPassword")}
-            onChangeText={(value) => {
-              trigger("confirmPassword");
-              setValue("confirmPassword", value);
-            }}
-          />
-          {errors.confirmPassword && <Text style={{ color: "red" }}>{errors.confirmPassword.message}</Text>}
-        </View>
-
-        <TouchableOpacity
-          style={{
-            backgroundColor: Constant.Colors.purple,
-            paddingVertical: height(2),
-            borderRadius: 10,
-            alignItems: "center",
-          }}
-          onPress={handleSubmit(onHandleSubmit)}
-          disabled={!isValid}
-        >
-          <Text style={{ color: "white", fontSize: totalSize(2.5) }}>Register</Text>
-        </TouchableOpacity>
-
-        <View style={{ flexDirection: "row", justifyContent: "center", marginTop: height(2) }}>
-          <Text>Already have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={{ color: Constant.Colors.purple }}>Login now</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </ScrollView>
-  );
-};
-
-export default Register;
+      </ScrollView>
+    );
+  }

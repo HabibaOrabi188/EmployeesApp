@@ -29,7 +29,7 @@ const MainStack = () => {
         <Stack.Screen name={'ManagerHome'} component={ManagerHome} />
         {/* <Stack.Screen name={'Requests'} component={MyTabs} /> */}
         <Stack.Screen name={'CreateRequest'} component={CreateRequest} />
-        <Stack.Screen name={'ProfileMenu'} component={MyTabs} /> 
+        <Stack.Screen name={'Home'} component={MyTabs} /> 
         <Stack.Screen name={'ContactUs'} component={ContactUs} />
         <Stack.Screen name={'Privacy'} component={Privacy} />
         <Stack.Screen name={'AboutUs'} component={AboutUs} />
