@@ -13,6 +13,7 @@ import ProfileMenu from '../Components/ProfileMenu/ProfileMenu';
 import ContactUs from '../Components/ContactUs/ContactUs';
 import Privacy from '../Components/Privacy/Privacy';
 import AboutUs from '../Components/AboutUs/AboutUs';
+import Profile from '../Components/Profile/Profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +22,7 @@ const MainStack = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{headerShown: false}} 
-        initialRouteName={'Register'}>
+        initialRouteName={'Home'}>
         <Stack.Screen name={'Splash'} component={SplashScreen} />
         <Stack.Screen name={'Introo'} component={Introo} />
         <Stack.Screen name={'Login'} component={Login} />
@@ -33,6 +34,7 @@ const MainStack = () => {
         <Stack.Screen name={'ContactUs'} component={ContactUs} />
         <Stack.Screen name={'Privacy'} component={Privacy} />
         <Stack.Screen name={'AboutUs'} component={AboutUs} />
+        <Stack.Screen name={'Profile'} component={Profile} />
       </Stack.Navigator>
     </NavigationContainer>
   );

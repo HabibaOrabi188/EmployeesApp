@@ -16,7 +16,9 @@ export default function ProfileMenu (){
         flex: 1,
     }}>
      <Header title={'Menu'} />
-    <TouchableOpacity style={ {
+    <TouchableOpacity 
+    onPress={() => {navigation.navigate('Profile')}}
+    style={ {
     alignItems: 'center',
     paddingHorizontal:width(2),
     paddingVertical:width(1.7),
@@ -45,7 +47,6 @@ export default function ProfileMenu (){
         <Icon name='keyboard-double-arrow-right' color={Constant.Colors.server} size={30} style={{marginRight:width(2)}}/>
       </TouchableOpacity>
 
-      {/* Menu Options */}
       <ScrollView style={styles.menuList}>
       <TouchableOpacity 
       onPress={() => {navigation.navigate('ContactUs')}}
@@ -53,7 +54,7 @@ export default function ProfileMenu (){
       style={styles.menuItem} >
           
           <View style={styles.menuContainer}>
-                <Icon name='privacy-tip' color={Constant.Colors.server} size={30} />
+                <Icon name='quick-contacts-mail' color={Constant.Colors.server} size={30} />
                 <Text style={styles.menuText}>Contact Us</Text>
               </View>
               <Icon name='keyboard-double-arrow-right' color={Constant.Colors.server} size={30} style={{marginRight:width(2)}}/>
@@ -77,7 +78,7 @@ export default function ProfileMenu (){
           <Icon name='keyboard-double-arrow-right' color={Constant.Colors.server} size={28} style={{marginRight:width(2)}}/>
         </TouchableOpacity>
         
-        <TouchableOpacity style={styles.menuItem} onPress={() => {}}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => {navigation.navigate('Login')}}>
           
           <View style={styles.menuContainer}>
             <Icon name='exit-to-app' color={Constant.Colors.server} size={30} />
