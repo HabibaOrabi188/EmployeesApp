@@ -1,5 +1,4 @@
-// App.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Avatar, IconButton } from 'react-native-paper';
 import Header from '../Header';
@@ -9,14 +8,43 @@ import { width, height, totalSize } from 'react-native-dimension';
 import images from '../../Constant/Images';
 import Constant from '../../Constant/Constant';
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import { db } from '../../../Firebase/Firebase'; // Ensure Firebase config is set up
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function ProfileMenu (){
     const navigation = useNavigation();
+    const [profile, setProfile] = useState('');
+
+    useEffect(() => {
+      const fetchUserData = async () => {
+        try {
+          const uid = await AsyncStorage.getItem('userUID');
+          if (uid) {
+            const userQuery = query(collection(db, 'users'), where('uid', '==', uid));
+            const querySnapshot = await getDocs(userQuery);
+            if (!querySnapshot.empty) {
+              const userDoc = querySnapshot.docs[0].data();
+              setProfile(userDoc);
+            } else {
+              console.log('No user found with this uid.');
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchUserData();
+    }, []);
   return (
     <View style={{
         flex: 1,
     }}>
      <Header title={'Menu'} />
-    <TouchableOpacity style={ {
+    <TouchableOpacity 
+    onPress={() => {navigation.navigate('Profile')}}
+    style={ {
     alignItems: 'center',
     paddingHorizontal:width(2),
     paddingVertical:width(1.7),
@@ -34,18 +62,17 @@ export default function ProfileMenu (){
         <Avatar.Image 
         style={{marginRight:10 }}
         size={64} 
-        source={{ uri: 'https://www.shutterstock.com/shutterstock/videos/1094588083/thumb/1.jpg?ip=x480' }} />
+        source={{ uri:profile.image }} />
         <Text style={{
                 fontSize: totalSize(2.8),
                 fontWeight: 'bold',
                 color: Constant.Colors.grayishPurple,
-            }}>Ahmed El-araby</Text>
+            }}>{profile.name}</Text>
 
         </View>
         <Icon name='keyboard-double-arrow-right' color={Constant.Colors.server} size={30} style={{marginRight:width(2)}}/>
       </TouchableOpacity>
 
-      {/* Menu Options */}
       <ScrollView style={styles.menuList}>
       <TouchableOpacity 
       onPress={() => {navigation.navigate('ContactUs')}}
@@ -53,7 +80,7 @@ export default function ProfileMenu (){
       style={styles.menuItem} >
           
           <View style={styles.menuContainer}>
-                <Icon name='privacy-tip' color={Constant.Colors.server} size={30} />
+                <Icon name='quick-contacts-mail' color={Constant.Colors.server} size={30} />
                 <Text style={styles.menuText}>Contact Us</Text>
               </View>
               <Icon name='keyboard-double-arrow-right' color={Constant.Colors.server} size={30} style={{marginRight:width(2)}}/>
@@ -77,7 +104,7 @@ export default function ProfileMenu (){
           <Icon name='keyboard-double-arrow-right' color={Constant.Colors.server} size={28} style={{marginRight:width(2)}}/>
         </TouchableOpacity>
         
-        <TouchableOpacity style={styles.menuItem} onPress={() => {}}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => {navigation.navigate('Login')}}>
           
           <View style={styles.menuContainer}>
             <Icon name='exit-to-app' color={Constant.Colors.server} size={30} />

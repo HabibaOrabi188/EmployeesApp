@@ -22,7 +22,9 @@ import Constant from "../../Constant/Constant";
     profileImage: {
         width: 80,
         height: 80,
-        borderRadius: 30, // Circular image
+        borderRadius: 30,
+        marginRight:10
+         // Circular image
       },
     timeSection: {
       backgroundColor: Constant.Colors.pink,

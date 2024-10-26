@@ -18,6 +18,12 @@ import {width, height, totalSize} from 'react-native-dimension';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Formik} from 'formik';
 import Constant from '../../Constant/Constant';
+import { auth } from '../../../Firebase/Firebase';  // Adjust the import based on your project structure
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { db } from '../../../Firebase/Firebase'; 
+import { collection, getDocs } from 'firebase/firestore';
+import { useState,useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
   const navigation = useNavigation();
@@ -31,11 +37,50 @@ export default function Login() {
       )
       .required('Password is required'),
   });
+  const [users,setUsers]=useState([])
 
-  const handleSubmit = values => {
-    // console.log('Form values:', values);
-    navigation.navigate('Home')
+  const handleSubmit = async (values) => {
+    try {
+      // Sign in the user
+      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+    
+      // Get the user's UID
+      const uid = userCredential.user.uid;
+  
+      // Save the UID to AsyncStorage
+      await AsyncStorage.setItem('userUID', uid);
+
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Error signing in:', error);
+      // Handle error messages based on the error code
+      if (error.code === 'auth/user-not-found') {
+        alert('User not found. Please register.');
+      } else if (error.code === 'auth/wrong-password') {
+        alert('Incorrect password. Please try again.');
+      } else {
+        alert('Error logging in. Please try again later.');
+      }
+    }
   };
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'users'));
+        const employeeData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setUsers(employeeData);
+
+      } catch (error) {
+        console.error("Error fetching employee data: ", error);
+      }
+    }; 
+  
+    fetchRequests();
+  }, []);
 
   return (
     <PaperProvider>
@@ -74,21 +119,20 @@ export default function Login() {
                     style={{
                       width: width(90),
                       height: height(7),
-                      
                       marginTop: height(-6),
                       borderRadius: 20,
                     }}
                   />
                   {touched.email && errors.email ? (
-                    <View style={{width:width(90),}}>
+                    <View style={{width: width(90)}}>
                       <Text style={{color: 'red', marginBottom: height(1)}}>
-                      {errors.email}
-                    </Text>
+                        {errors.email}
+                      </Text>
                     </View>
                   ) : null}
 
                   <TextInput
-                    style={{width: width(90), height: height(7),marginTop: height(2.6),}}
+                    style={{width: width(90), height: height(7), marginTop: height(2.6)}}
                     mode="outlined"
                     label="Password"
                     placeholder="Enter your password"
@@ -107,10 +151,10 @@ export default function Login() {
                     }
                   />
                   {touched.password && errors.password ? (
-                    <View style={{width:width(90)}}>
+                    <View style={{width: width(90)}}>
                       <Text style={{color: 'red', marginBottom: height(1)}}>
-                      {errors.password}
-                    </Text>
+                        {errors.password}
+                      </Text>
                     </View>
                   ) : null}
 
@@ -136,25 +180,23 @@ export default function Login() {
                 </>
               )}
             </Formik>
-            <View style={{ flexDirection: 'row', alignItems: 'center',margin:height(2) }}>
-
-        <Text style={{color:Constant.Colors.server}}>
-        If you don't have an account,
-        </Text>
-
-        <TouchableOpacity
-        onPress={()=>{
-          navigation.navigate('Register')
-        }}
-        >
-          <Text style={{color:Constant.Colors.purple,marginRight:width(1),fontWeight:'700'}}>
-            Register now
-          </Text>
-        </TouchableOpacity>
-
-        </View>
+           { users.length>=1?
+           null
+           :
+            <View style={{ flexDirection: 'row', alignItems: 'center', margin: height(2) }}>
+              <Text style={{ color: Constant.Colors.server }}>
+                If you don't have an account,
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('Register');
+                }}>
+                <Text style={{ color: Constant.Colors.purple, marginRight: width(1), fontWeight: '700' }}>
+                  Register now
+                </Text>
+              </TouchableOpacity>
+            </View>}
           </View>
-
         </ScrollView>
       </KeyboardAvoidingView>
     </PaperProvider>
