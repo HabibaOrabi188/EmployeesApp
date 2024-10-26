@@ -7,8 +7,9 @@ import * as ImagePicker from 'expo-image-picker';
 import { width, height, totalSize } from 'react-native-dimension';
 import images from '../../Constant/Images';
 import Constant from '../../Constant/Constant';
-import { db } from '../../../Firebase/Firebase'; // Ensure Firebase config is set up
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../../../Firebase/Firebase';
+import { collection, query, where, getDocs, updateDoc, doc,getDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profile = () => {
@@ -40,9 +41,9 @@ const Profile = () => {
     fetchUserData();
   }, []);
 
-  const handleImagePick = async () => { 
+  const handleImagePick = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
+    if (!permissionResult.granted) {
       alert("Permission to access media library is required!");
       return;
     }
@@ -53,8 +54,46 @@ const Profile = () => {
       quality: 1,
     });
     if (!result.canceled) {
-      setProfileImage(result.assets[0].uri); 
+      const imageUri = result.assets[0].uri;
+      setProfileImage(imageUri); 
+      await uploadImageToFirebase(imageUri);  // Call upload function
     }
+  };
+  
+  const uploadImageToFirebase = async (imageUri) => {
+    try {
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+      const storage = getStorage();
+      const storageRef = ref(storage, `profileImages/${profile.uid}.jpg`);
+      
+      await uploadBytes(storageRef, blob);
+      const downloadURL = await getDownloadURL(storageRef);
+  
+      // Check if the user document exists before updating
+      if (!profile || !profile.uid) {
+        console.error("Profile is not available or UID is missing.");
+        return; // Exit if profile doesn't exist
+      }
+  
+      // Fetch the user document using the UID field in the query
+      const userQuery = query(collection(db, "users"), where("uid", "==", profile.uid));
+      const querySnapshot = await getDocs(userQuery);
+  
+      if (querySnapshot.empty) {
+        console.error("No such document found with this UID:", profile.uid);
+        return; // Exit if no document matches
+      }
+  
+      const userDocRef = querySnapshot.docs[0].ref; // Get the document reference from the query result
+  
+      // Update profile image URL in Firestore
+      await updateDoc(userDocRef, { image: downloadURL });
+      console.log("Image uploaded and profile updated successfully!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  
   };
 
   if (loading) {
@@ -63,7 +102,7 @@ const Profile = () => {
 
   return (
     <ScrollView>
-      <View style={{flex:1, paddingBottom: height(4), alignItems: 'center'}}>
+      <View style={{ flex:1, paddingBottom: height(4), alignItems: 'center' }}>
         <Header title={'Profile'} />
         <View style={{ position: 'relative', marginTop: height(4) }}>
           <Image
@@ -97,7 +136,6 @@ const Profile = () => {
          }}>{profile.name}</Text>
             <Text style={{
            color: 'gray',
-          //  marginBottom: height(1),
            marginTop: height(.6),
            fontSize: totalSize(2.6),
          }}>{profile.position}</Text>
@@ -109,7 +147,6 @@ const Profile = () => {
           marginHorizontal: height(2),
           marginVertical:height(5),
          }}>
-              {/* <InfoRow icon={<Ionicons name="person" size={24} color="gray" />} label="Gender" value={profile.gender} /> */}
               <InfoRow icon={<Ionicons name="call" size={26} style={{ width:width(13) }}
               color={Constant.Colors.purple} />} label="Phone" value={profile.phone} />
               <InfoRow icon={<FontAwesome5 name="money-check" size={26} style={{width:width(13)}}
@@ -118,10 +155,6 @@ const Profile = () => {
                color={Constant.Colors.purple} />} label="Working Hours" value={profile.hours} />
                <InfoRow icon={<MaterialIcons name="today" size={26} style={{width:width(13) }}
                color={Constant.Colors.purple} />} label="Working Hours" value={profile.hours} />
-              
-              {/* <InfoRow icon={<MaterialIcons name="badge" size={24} color="gray" />} label="User ID" value={profile.userId} /> */}
-              {/* <InfoRow icon={<Entypo name="location-pin" size={24} style={{ marginRight: width(2) }}
-              color="gray" />} label="Work Location" value={profile.workLocation} /> */}
             </View>
           </>
         )}
@@ -160,4 +193,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+
 export default Profile;
