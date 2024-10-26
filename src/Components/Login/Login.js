@@ -20,6 +20,10 @@ import {Formik} from 'formik';
 import Constant from '../../Constant/Constant';
 import { auth } from '../../../Firebase/Firebase';  // Adjust the import based on your project structure
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { db } from '../../../Firebase/Firebase'; 
+import { collection, getDocs } from 'firebase/firestore';
+import { useState,useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
   const navigation = useNavigation();
@@ -33,12 +37,19 @@ export default function Login() {
       )
       .required('Password is required'),
   });
+  const [users,setUsers]=useState([])
 
   const handleSubmit = async (values) => {
     try {
       // Sign in the user
-      await signInWithEmailAndPassword(auth, values.email, values.password);
-      // Navigate to Home screen on successful login
+      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+    
+      // Get the user's UID
+      const uid = userCredential.user.uid;
+  
+      // Save the UID to AsyncStorage
+      await AsyncStorage.setItem('userUID', uid);
+
       navigation.navigate('Home');
     } catch (error) {
       console.error('Error signing in:', error);
@@ -52,6 +63,24 @@ export default function Login() {
       }
     }
   };
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'users'));
+        const employeeData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setUsers(employeeData);
+
+      } catch (error) {
+        console.error("Error fetching employee data: ", error);
+      }
+    }; 
+  
+    fetchRequests();
+  }, []);
 
   return (
     <PaperProvider>
@@ -151,6 +180,9 @@ export default function Login() {
                 </>
               )}
             </Formik>
+           { users.length>=1?
+           null
+           :
             <View style={{ flexDirection: 'row', alignItems: 'center', margin: height(2) }}>
               <Text style={{ color: Constant.Colors.server }}>
                 If you don't have an account,
@@ -163,7 +195,7 @@ export default function Login() {
                   Register now
                 </Text>
               </TouchableOpacity>
-            </View>
+            </View>}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

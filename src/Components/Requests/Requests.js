@@ -1,10 +1,5 @@
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable react/self-closing-comp */
 import { useEffect, useState } from 'react';
-import { ImageBackground, StatusBar, Text, TouchableOpacity } from 'react-native';
-import { View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { width, height, totalSize } from 'react-native-dimension';
 import images from '../../Constant/Images';
@@ -12,56 +7,86 @@ import Header from '../Header';
 import Constant from '../../Constant/Constant';
 import { Modal, PaperProvider, Portal } from 'react-native-paper';
 import CreateRequest from './CreateRequest';
-import { db } from '../../../Firebase/Firebase'; 
-import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../../Firebase/Firebase';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
 
 export default function Requests() {
-  const navigation = useNavigation();
-  const [requests, setRequests] = useState({});
+  const [requests, setRequests] = useState(null);
   const [visible, setVisible] = useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  const handleRequest = (request) => {
-    setRequests(request);
-    hideModal();
+  const handleSaveRequest = async (newRequest) => {
+    try {
+      const docRef = await addDoc(collection(db, 'users'), newRequest);
+      setRequests((prevRequests) => [
+        ...prevRequests,
+        { id: docRef.id, ...newRequest },
+      ]);
+      hideModal();
+    } catch (error) {
+      console.error("Error adding request: ", error);
+    }
   };
 
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'Employees'));
-        const employeeData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        console.log(employeeData);
+        const querySnapshot = await getDocs(collection(db, 'users'));
+        const allRequests = querySnapshot.docs.flatMap(doc => doc.data().request || []); 
+        setRequests(allRequests); 
       } catch (error) {
-        console.error("Error fetching employee data: ", error);
+        console.error("Error fetching requests data: ", error);
       }
     };
   
     fetchRequests();
   }, []);
-  
-  
+
   return (
     <PaperProvider>
       <View style={{ flex: 1 }}>
         <Header title={'Request'} />
 
-        {requests.type ? (
+        {requests && requests.length > 0 ? (
           <View style={{ flex: 1, alignItems: 'center' }}>
-            <Animatable.Image
+            {requests[0].status===''? 
+              <Animatable.Image
               source={require('../../Assets/images/waiting.png')}
               style={{
-                width: width(90),
-                height: height(50),
+                width: width(100),
+                height: height(40),
                 marginTop: height(6),
               }}
-              resizeMode="stretch"
+              resizeMode='contain'
             />
+            :
+            ( requests[0].status==='true'? 
+              <Animatable.Image
+              source={require('../../Assets/images/accept.png')}
+              style={{
+                width: width(100),
+                height: height(40),
+                marginTop: height(6),
+              }}
+              resizeMode='contain'
+            />
+            :
+            <Animatable.Image
+              source={require('../../Assets/images/denied.png')}
+              style={{
+                width: width(100),
+                height: height(40),
+                marginTop: height(6),
+              }}
+              resizeMode='contain'
+            />
+
+            )
+
+          
+          }
             <Text
               style={{
                 fontSize: totalSize(3),
@@ -73,13 +98,13 @@ export default function Requests() {
               }}
             >
               I need to take
-              {requests.type === 'Vacation'
-                ? ' ' + requests.type + ' leave from ' + requests.startDate + ' to ' + requests.endDate
-                : ' ' + requests.type + ' to leave new'}
+              {requests[0].type === 'Vacation'
+                ? ' ' + requests[0].type + ' leave from ' + requests[0].startDate + ' to ' + requests[0].endDate
+                : ' ' + requests[0].type + ' to leave now'}
             </Text>
 
             <TouchableOpacity
-              onPress={() => setRequests({})}
+              onPress={() => setRequests([])}
               style={{
                 width: width(60),
                 height: height(5),
@@ -90,6 +115,7 @@ export default function Requests() {
                 marginTop: height(3),
                 alignItems: 'center',
                 justifyContent: 'center',
+                marginTop:height(3)
               }}
             >
               <Text style={{ fontSize: totalSize(2) }}>Cancel Request</Text>
@@ -115,7 +141,8 @@ export default function Requests() {
               }}
             >
               There aren't requests yet
-            </Text><TouchableOpacity
+            </Text>
+            <TouchableOpacity
               onPress={showModal}
               style={{
                 width: width(60),
@@ -146,7 +173,7 @@ export default function Requests() {
             marginTop: height(10),
           }}
         >
-          <CreateRequest onClose={handleRequest} />
+          <CreateRequest onSave={handleSaveRequest} />
         </Modal>
       </Portal>
     </PaperProvider>

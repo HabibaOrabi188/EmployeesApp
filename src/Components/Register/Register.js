@@ -20,11 +20,15 @@ import {
   import Constant from '../../Constant/Constant';
   import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
   import AsyncStorage from '@react-native-async-storage/async-storage';
-
+  import { getFirestore, collection, addDoc,setDoc,doc } from 'firebase/firestore';
+  import { db } from '../../../Firebase/Firebase'; 
   export default function Register() {
     const navigation = useNavigation();
 
     const validationSchema = Yup.object().shape({
+        name: Yup.string()
+            .matches(/^[A-Za-z\s]{3,}$/, 'The name must be more than 3 letters')
+            .required('The name is required'),
         email: Yup.string().email('Email is invalid').required('Email is required'),
         phone: Yup.string()
             .matches(/^[0-9]{11}$/, 'Phone number must be 11 digits')
@@ -47,6 +51,13 @@ import {
         // Store user token in AsyncStorage
         await AsyncStorage.setItem('userToken', user.uid);
 
+        await addDoc(collection(db, 'users'), {
+            uid: user.uid,
+            name: values.name,
+            email: values.email,
+            phone: values.phone,
+          });
+
         // Navigate to the Home screen
         navigation.navigate('Home');
       } catch (error) {
@@ -65,7 +76,7 @@ import {
               duration={4000}
           />
           <Formik
-              initialValues={{ email: '', phone: '', password: '', confirmPassword: '' }}
+              initialValues={{ name:'',email: '', phone: '', password: '', confirmPassword: '' }}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}>
               {({
@@ -77,6 +88,28 @@ import {
                   touched,
               }) => (
                   <>
+
+<TextInput
+                          placeholder="Enter your email"
+                          label="Name"
+                          mode="outlined"
+                          value={values.name}
+                          onChangeText={handleChange('name')}
+                          onBlur={handleBlur('name')}
+                          style={{
+                              width: width(90),
+                              height: height(7),
+                              marginTop: height(-6),
+                              borderRadius: 20,
+                          }}
+                      />
+                      {touched.name && errors.name ? (
+                          <View style={{ width: width(90) }}>
+                              <Text style={{ color: 'red', marginBottom: height(1) }}>
+                                  {errors.name}
+                              </Text>
+                          </View>
+                      ) : null}
                       <TextInput
                           placeholder="Enter your email"
                           label="Email"

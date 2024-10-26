@@ -26,7 +26,7 @@ function Reports() {
           </View>
           <View style={[styles.statInnerBox, styles.leaveEarlyBox]}>
             <Text style={[styles.statHeader,styles.late]}>Leave early</Text>
-            <Text style={[styles.statValue,styles.late]}>04</Text>
+            <Text style={[styles.statValue,styles.late]}>01</Text>
           </View>
         </View>
 
