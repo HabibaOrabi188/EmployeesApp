@@ -86,6 +86,7 @@ function Home() {
           <Text style={styles.timeText}>{formattedTime}</Text>
 
           <View style={styles.buttonsRow}>
+            
             <Button mode="contained" onPress={() => console.log('Pressed')} contentStyle={styles.cafeButtonContent} style={styles.cafeButton}>
               <Ionicons name="cafe-outline" size={20} />
             </Button>
@@ -97,19 +98,20 @@ function Home() {
         <Text style={styles.statsTitle}>Current Month Statistics</Text>
 
         <View style={styles.statsRow}>
-          <View style={styles.statCardLeft}>
-            <Text style={[styles.statCardTextRight, styles.attend]}>Attendance</Text>
-            <Text style={[styles.statCardNumber, styles.attend]}>17</Text>
-          </View>
+        <View style={styles.workingHoursBox}>
+        <Text style={[styles.statHeader,styles.working]}>Arriving late</Text>
+        <Text style={[styles.statValue,styles.working]}>{userData.lateDays}</Text>
+        </View>
           <View style={styles.statCardRight}>
             <View style={styles.delayCard}>
-              <Text style={[styles.statCardTextRight, styles.late]}>Days of Tardiness</Text>
-              <Text style={[styles.statCardNumber, styles.late]}>{userData.lateDays}</Text>
+              <Text style={[styles.statCardTextRight, styles.late]}>Leave early </Text>
+              <Text style={[styles.statCardNumber, styles.late]}>{userData.earlyLeave}</Text>
             </View>
             <View style={styles.absenceCard}>
               <Text style={[styles.statCardTextRight, styles.absent]}>Days of Absence</Text>
               <Text style={[styles.statCardNumber, styles.absent]}>{userData.absenceDays}</Text>
             </View>
+
           </View>
         </View>
       </View>
