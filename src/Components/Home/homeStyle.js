@@ -120,5 +120,25 @@ import Constant from "../../Constant/Constant";
     late:{
       color:Constant.Colors.late 
     },
+    workingHoursBox: {
+      backgroundColor: '#FF885B',
+      borderRadius: 15,
+      padding: 10,
+      width: '35%',
+      height: 220,
+      justifyContent: 'center',
+    },
+    statHeader:{
+      fontSize:15,
+      fontWeight:"bold"
+    },
+    statValue: {
+      alignSelf: 'flex-end',
+      fontSize:18,
+      fontWeight:"bold"
+    },
+    working:{
+      color:Constant.Colors.white
+  }
   });
   export default styles
