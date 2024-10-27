@@ -8,7 +8,7 @@ import Header from '../Header';
 import Constant from '../../Constant/Constant';
 import { db } from '../../../Firebase/Firebase'; // import your Firestore config
 
-export default function CreateRequest({ onClose }) {
+export default function CreateRequest({ onSave, onClose }) {
   const navigation = useNavigation();
   const [Vacation, setVacation] = useState(true);
   const [Permission, setPermission] = useState(false);

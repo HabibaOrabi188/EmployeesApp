@@ -11,6 +11,8 @@ const Tab = createBottomTabNavigator();
 function MyTabs() {
   return (
     <Tab.Navigator 
+
+    initialRouteName='Home'
     
     screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
@@ -33,7 +35,6 @@ function MyTabs() {
       })} >
       <Tab.Screen name="Home" component={Home} />
 
-      <Tab.Screen name="Reports"  component={Reports}/>
       <Tab.Screen name="Requests"  component={Requests}/>
       <Tab.Screen name="Menu"  component={ProfileMenu} />
     </Tab.Navigator>

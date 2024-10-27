@@ -91,10 +91,11 @@ export default function Login() {
         <ScrollView>
           <View style={{flex: 1, alignItems: 'center', padding: height(4)}}>
             <Animatable.Image
-              source={images.logo}
+              source={images.MaimLogo}
               animation="zoomIn"
-              style={{width: width(100), height: height(45)}}
+              style={{width: width(80), height: height(45)}}
               duration={4000}
+              resizeMode='contain'
             />
             <Formik
               initialValues={{email: '', password: ''}}

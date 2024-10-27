@@ -30,6 +30,27 @@ export default function Requests() {
     }
   };
 
+  const handleCancelRequest= async () => {
+    try {
+      // Retrieve uid from AsyncStorage
+      const uid = await AsyncStorage.getItem('uid');
+      
+      if (uid) {
+        // Clear the 'request' array in Firestore
+        await updateDoc(doc(db, 'users', uid), {
+          request: [],
+        });
+        setRequests([]);
+      Alert.alert('All requests deleted successfully');
+    } else {
+      Alert.alert('User ID not found in storage');
+    }
+  } catch (error) {
+    console.error('Error deleting all requests:', error);
+    Alert.alert('Failed to delete all requests. Please try again.');
+  }
+};
+
   useEffect(() => {
     const fetchRequests = async () => {
       try {
@@ -98,13 +119,16 @@ export default function Requests() {
               }}
             >
               I need to take
-              {requests[0].type === 'Vacation'
-                ? ' ' + requests[0].type + ' leave from ' + requests[0].startDate + ' to ' + requests[0].endDate
-                : ' ' + requests[0].type + ' to leave now'}
+              {requests[requests.length-1].type === 'Vacation'
+                ? ' ' + requests[requests.length-1].type + ' leave from ' + requests[requests.length-1].startDate + ' to ' + requests[requests.length-1].endDate
+                : ' ' + requests[requests.length-1].type + ' to leave now'}
             </Text>
 
             <TouchableOpacity
-              onPress={() => setRequests([])}
+              onPress={() => {
+                handleCancelRequest
+                setRequests([])
+              }}
               style={{
                 width: width(60),
                 height: height(5),
@@ -173,7 +197,7 @@ export default function Requests() {
             marginTop: height(10),
           }}
         >
-          <CreateRequest onSave={handleSaveRequest} />
+          <CreateRequest onSave={handleSaveRequest} onClose={hideModal} />
         </Modal>
       </Portal>
     </PaperProvider>

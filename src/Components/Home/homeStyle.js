@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import Constant from "../../Constant/Constant";
+import {width, height, totalSize} from 'react-native-dimension';
  const styles = StyleSheet.create({
     container: {
       backgroundColor:Constant.Colors.white
@@ -67,49 +68,45 @@ import Constant from "../../Constant/Constant";
       fontSize: 18,
     },
     statsRow: {
-      flexDirection: 'row',
       marginTop: 10,
-      marginBottom:100
-    },
-    statCardLeft: {
-      backgroundColor: Constant.Colors.attendBackground,
-      justifyContent: 'center',
-      width: '48%',
-      height:'45%',
-      marginTop:'10%',
-      borderRadius: 10,
-      marginRight: '4%',
-      padding: 10,
+      height:height(25),
+      alignItems:'center',
+      alignSelf:'center'
     },
     statCardRight: {
-      width: '48%',
+      width: '90%',
       borderRadius: 10,
-      padding: 10,
+      flexDirection:'row',
+      height: height(10),
+      justifyContent:'space-between',
+      marginTop:height(3),
+      paddingHorizontal:width(2)
     },
     statCardTextRight: {
       fontSize: 16,
 
-      fontWeight:"bold"
+      fontWeight:'600'
     },
     statCardNumber: {
-      fontSize: 20,
+      fontSize: 16,
       fontWeight:"bold",
       alignSelf: 'flex-end',
     },
     delayCard: {
       backgroundColor: Constant.Colors.lateBackground,
       justifyContent: 'center',
-      padding: 10,
-      height:'30%',
-      marginBottom: 10,
+      paddingHorizontal:width(2),
+      height: height(10),
       borderRadius: 10,
+      width:width(38)
     },
     absenceCard: {
       backgroundColor: Constant.Colors.absentBackground,
       justifyContent: 'center',
-      height:'30%',
-      padding: 10,
+      height: height(10),
+      paddingHorizontal:width(2),
       borderRadius: 10,
+      width:width(38)
     },
     attend:{
       color:Constant.Colors.green
@@ -123,22 +120,25 @@ import Constant from "../../Constant/Constant";
     workingHoursBox: {
       backgroundColor: '#FF885B',
       borderRadius: 15,
-      padding: 10,
-      width: '35%',
-      height: 220,
+      width:width(70),
+      height: height(10),
       justifyContent: 'center',
+      paddingHorizontal:width(10)
+      
     },
     statHeader:{
       fontSize:15,
-      fontWeight:"bold"
+      fontWeight:"700",
+      color:'#db6d45'
     },
     statValue: {
       alignSelf: 'flex-end',
       fontSize:18,
-      fontWeight:"bold"
+      fontWeight:"bold",
+      color:'#db6d45'
     },
     working:{
-      color:Constant.Colors.white
+      color:'#c45c36'
   }
   });
   export default styles

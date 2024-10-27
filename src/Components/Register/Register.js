@@ -70,7 +70,7 @@ import {
       <ScrollView>
         <View style={{ flex: 1, alignItems: 'center', paddingTop: height(2) }}>
           <Animatable.Image
-              source={images.logo}
+              source={images.MaimLogo}
               animation="zoomIn"
               style={{ width: width(100), height: height(35) }}
               duration={4000}

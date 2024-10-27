@@ -98,6 +98,7 @@ function Home() {
         <Text style={styles.statsTitle}>Current Month Statistics</Text>
 
         <View style={styles.statsRow}>
+          
         <View style={styles.workingHoursBox}>
         <Text style={[styles.statHeader,styles.working]}>Arriving late</Text>
         <Text style={[styles.statValue,styles.working]}>{userData.lateDays}</Text>
