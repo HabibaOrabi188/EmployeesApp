@@ -17,11 +17,12 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [profileImage, setProfileImage] = useState(null);
   const navigation = useNavigation();
-
+  const [id, setId] = useState('');
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const uid = await AsyncStorage.getItem('userUID');
+        setId(uid);
         if (uid) {
           const userQuery = query(collection(db, 'users'), where('uid', '==', uid));
           const querySnapshot = await getDocs(userQuery);
@@ -107,7 +108,7 @@ const Profile = () => {
         <View style={{ position: 'relative', marginTop: height(4) }}>
           <Image
             source={profileImage ? { uri: profileImage } : { uri: profile.image }}
-            style={{ width: width(50), height: height(25), borderRadius: width(25) }}
+            style={{ width: width(50), height: width(50), borderRadius: width(25) }}
           />
           <TouchableOpacity
             onPress={handleImagePick}  
@@ -116,14 +117,14 @@ const Profile = () => {
               bottom: height(2),
               right: width(1),
               backgroundColor: Constant.Colors.purple,
-              borderRadius: height(3),
+              borderRadius: width(7),
               alignItems: 'center',
               justifyContent: 'center',
-              height: height(6),
-              width: width(14),
+              height: width(12),
+              width: width(12),
             }}
           >
-            <Entypo name="plus" size={24} color="white" />
+            <Entypo name="plus" size={26} color="white" />
           </TouchableOpacity>
         </View>
 
@@ -149,12 +150,14 @@ const Profile = () => {
          }}>
               <InfoRow icon={<Ionicons name="call" size={26} style={{ width:width(13) }}
               color={Constant.Colors.purple} />} label="Phone" value={profile.phone} />
-              <InfoRow icon={<FontAwesome5 name="money-check" size={26} style={{width:width(13)}}
+              {id !== "3bH95rVYDhQWtpJWhirw6HIgP9C2"?<View>
+                <InfoRow icon={<FontAwesome5 name="money-check" size={26} style={{width:width(13)}}
                color={Constant.Colors.purple} />} label="Salary" value={profile.salary} />
               <InfoRow icon={<MaterialIcons name="access-time" size={26} style={{width:width(13)}}
                color={Constant.Colors.purple} />} label="Working Hours" value={profile.hours} />
                <InfoRow icon={<MaterialIcons name="today" size={26} style={{width:width(13) }}
-               color={Constant.Colors.purple} />} label="Working Hours" value={profile.hours} />
+               color={Constant.Colors.purple} />} label="Working days" value={profile.days} /></View>:null}
+             
             </View>
           </>
         )}
