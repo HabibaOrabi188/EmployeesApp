@@ -74,6 +74,7 @@ import {
               animation="zoomIn"
               style={{ width: width(100), height: height(35) }}
               duration={4000}
+              resizeMode='contain'
           />
           <Formik
               initialValues={{ name:'',email: '', phone: '', password: '', confirmPassword: '' }}

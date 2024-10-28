@@ -90,9 +90,16 @@ function Home() {
             <Button mode="contained" onPress={() => console.log('Pressed')} contentStyle={styles.cafeButtonContent} style={styles.cafeButton}>
               <Ionicons name="cafe-outline" size={20} />
             </Button>
+
           </View>
 
           <Text style={styles.breakText}>It's a good time to take a break - Enjoy your time</Text>
+
+          <Button mode="contained" onPress={() => console.log('Pressed')} contentStyle={styles.exitButtonLabel} style={styles.exitButtonContent}>
+              <Text style={styles.exitButtonLabel}>
+                Leave
+              </Text>
+            </Button>
         </View>
 
         <Text style={styles.statsTitle}>Current Month Statistics</Text>

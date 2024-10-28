@@ -8,6 +8,7 @@ import ProfileMenu from '../Components/ProfileMenu/ProfileMenu';
 import ManagerRequests from '../Components/ManagerRequests/ManagerRequests';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState, useEffect } from 'react';
+import ManagerHome from '../Components/ManagerHome/ManagerHome';
 
 const Tab = createBottomTabNavigator();
 
@@ -48,9 +49,9 @@ function MyTabs() {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Home" component={id==='3bH95rVYDhQWtpJWhirw6HIgP9C2'? ManagerHome:Home} />
 
-      <Tab.Screen name="Requests"  component={Requests}/>
+      <Tab.Screen name="Requests"  component={id==='3bH95rVYDhQWtpJWhirw6HIgP9C2'?ManagerRequests:Requests}/>
       <Tab.Screen name="Menu"  component={ProfileMenu} />
     </Tab.Navigator>
   );

@@ -8,7 +8,9 @@ import Constant from '../../Constant/Constant';
 import { Modal, PaperProvider, Portal } from 'react-native-paper';
 import CreateRequest from './CreateRequest';
 import { db } from '../../../Firebase/Firebase';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc,query,where } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function Requests() {
   const [requests, setRequests] = useState(null);
@@ -19,6 +21,7 @@ export default function Requests() {
 
   const handleSaveRequest = async (newRequest) => {
     try {
+      
       const docRef = await addDoc(collection(db, 'users'), newRequest);
       setRequests((prevRequests) => [
         ...prevRequests,
@@ -33,7 +36,7 @@ export default function Requests() {
   const handleCancelRequest= async () => {
     try {
       // Retrieve uid from AsyncStorage
-      const uid = await AsyncStorage.getItem('uid');
+      const uid = await AsyncStorage.getItem('userUID');
       
       if (uid) {
         // Clear the 'request' array in Firestore
@@ -54,14 +57,30 @@ export default function Requests() {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'users'));
-        const allRequests = querySnapshot.docs.flatMap(doc => doc.data().request || []); 
-        setRequests(allRequests); 
+        const uid = await AsyncStorage.getItem('userUID');
+
+        // Check if uid is valid before querying
+        if (!uid) {
+          console.log("User UID not found in AsyncStorage.");
+          return;
+        }
+
+        const userQuery = query(collection(db, 'users'), where('uid', '==', uid));
+        const querySnapshot = await getDocs(userQuery);
+
+        if (!querySnapshot.empty) {
+          // Assuming there's only one user with the given uid
+          const userData = querySnapshot.docs[0].data();
+          const allRequests = userData.request || []; // Safely access requests
+          setRequests(allRequests);
+        } else {
+          console.log("No user found with the provided uid.");
+        }
       } catch (error) {
         console.error("Error fetching requests data: ", error);
       }
     };
-  
+
     fetchRequests();
   }, []);
 

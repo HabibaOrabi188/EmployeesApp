@@ -56,9 +56,10 @@ import {width, height, totalSize} from 'react-native-dimension';
     exitButtonContent: {
       backgroundColor: 'white',
       paddingHorizontal: 10,
+      marginTop:height(2)
     },
     exitButtonLabel: {
-      color: 'black',
+      color: Constant.Colors.pink,
     },
     breakText: {
       color: 'white',

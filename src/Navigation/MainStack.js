@@ -14,6 +14,7 @@ import ContactUs from '../Components/ContactUs/ContactUs';
 import Privacy from '../Components/Privacy/Privacy';
 import AboutUs from '../Components/AboutUs/AboutUs';
 import Profile from '../Components/Profile/Profile';
+import EmployeeProfile from '../Components/EmployeeProfile/EmployeeProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,12 +23,12 @@ const MainStack = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{headerShown: false}} 
-        initialRouteName={'Home'}>
+        initialRouteName={'Splash'}>
         <Stack.Screen name={'Splash'} component={SplashScreen} />
         <Stack.Screen name={'Introo'} component={Introo} />
         <Stack.Screen name={'Login'} component={Login} />
         <Stack.Screen name={'Register'} component={Register} />
-        <Stack.Screen name={'ManagerHome'} component={ManagerHome} />
+        {/* <Stack.Screen name={'ManagerHome'} component={ManagerHome} /> */}
         {/* <Stack.Screen name={'Requests'} component={MyTabs} /> */}
         <Stack.Screen name={'CreateRequest'} component={CreateRequest} />
         <Stack.Screen name={'Home'} component={MyTabs} /> 
@@ -35,6 +36,7 @@ const MainStack = () => {
         <Stack.Screen name={'Privacy'} component={Privacy} />
         <Stack.Screen name={'AboutUs'} component={AboutUs} />
         <Stack.Screen name={'Profile'} component={Profile} />
+        <Stack.Screen name={'EmployeeProfile'} component={EmployeeProfile} />
       </Stack.Navigator>
     </NavigationContainer>
   );
