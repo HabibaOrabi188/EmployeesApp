@@ -106,7 +106,7 @@ const EmployeeProfile = ({route}) => {
             source={profileImage ? { uri: profileImage } : { uri: profile.image }}
             style={{ width: width(50), height: width(50), borderRadius: width(25) }}
           />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={handleImagePick}  
             style={{
               position: 'absolute',
@@ -121,7 +121,7 @@ const EmployeeProfile = ({route}) => {
             }}
           >
             <Entypo name="plus" size={26} color="white" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {profile && (

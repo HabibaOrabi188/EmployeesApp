@@ -1,11 +1,12 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert,TextInput } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity, Alert, TextInput, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { width, height, totalSize } from 'react-native-dimension';
-import { PaperProvider, } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Constant from '../../Constant/Constant';
 import { db } from '../../../Firebase/Firebase';
 
@@ -32,11 +33,9 @@ export default function AddUser({ onClose }) {
   const handleAddUser = async (values) => {
     const auth = getAuth();
     try {
-      // Step 1: Create user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
 
-      // Step 2: Add user to Firestore
       await addDoc(collection(db, 'users'), {
         name: values.name,
         email: values.email,
@@ -45,14 +44,12 @@ export default function AddUser({ onClose }) {
         salary: values.salary,
         days: values.workingDays,
         hours: values.workingHours,
-        image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCbU49DD_iYcjSUEXG-Oy7POjJzaMn1GYEZg&s',
-        absenceDays:0,
-        earlyLeave:0,
-        lateDays:0,
-        leaveTime:[],
-        uid:user.uid,
-
-
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCbU49DD_iYcjSUEXG-Oy7POjJzaMn1GYEZg&s',
+        absenceDays: 0,
+        earlyLeave: 0,
+        lateDays: 0,
+        leaveTime: [],
+        uid: user.uid,
       });
 
       Alert.alert('User added successfully!');
@@ -62,39 +59,59 @@ export default function AddUser({ onClose }) {
       Alert.alert('Failed to add user. Please try again.');
     }
   };
-  const textInputStyle={
-    borderBottomWidth:1,
-    borderBottomColor:Constant.Colors.purple,
-    marginHorizontal:height(1.6),
-    marginVertical:width(1.7)
-}
+
+  const textInputStyle = {
+    borderBottomWidth: 1,
+    borderBottomColor: Constant.Colors.purple,
+    marginHorizontal: height(1.6),
+    marginVertical: width(1.7),
+  };
+
   return (
-      <View style={{ flex: 1,backgroundColor:'#fff',padding:10 }}>
-        <Text style={{ textAlign: 'center', fontSize: totalSize(2.6), color: Constant.Colors.grayishPurple, marginBottom: height(2) }}>
+    <KeyboardAwareScrollView
+      contentContainerStyle={{ flexGrow: 1, padding: 6 }}
+      extraScrollHeight={20}
+      enableOnAndroid
+      keyboardShouldPersistTaps="handled"
+    >
+      <View style={{ flex: 1, backgroundColor: '#fff' }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            fontSize: totalSize(2.6),
+            color: Constant.Colors.grayishPurple,
+            marginBottom: height(2),
+          }}
+        >
           New Employee
         </Text>
         <Formik
-          initialValues={{ name: '', email: '', phone: '', password: '', position: '', salary: '', workingDays: '', workingHours: '' }}
+          initialValues={{
+            name: '',
+            email: '',
+            phone: '',
+            password: '',
+            position: '',
+            salary: '',
+            workingDays: '',
+            workingHours: '',
+          }}
           validationSchema={validationSchema}
           onSubmit={handleAddUser}
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
             <>
               <TextInput
-                label="Name"
                 placeholder="Enter name"
-                mode="outlined"
                 value={values.name}
                 onChangeText={handleChange('name')}
                 onBlur={handleBlur('name')}
                 style={textInputStyle}
               />
               {touched.name && errors.name && <Text style={{ color: 'red' }}>{errors.name}</Text>}
-              
+
               <TextInput
-                label="Email"
                 placeholder="Enter email"
-                mode="outlined"
                 value={values.email}
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
@@ -103,9 +120,7 @@ export default function AddUser({ onClose }) {
               {touched.email && errors.email && <Text style={{ color: 'red' }}>{errors.email}</Text>}
 
               <TextInput
-                label="Phone"
                 placeholder="Enter phone number"
-                mode="outlined"
                 value={values.phone}
                 onChangeText={handleChange('phone')}
                 onBlur={handleBlur('phone')}
@@ -114,9 +129,7 @@ export default function AddUser({ onClose }) {
               {touched.phone && errors.phone && <Text style={{ color: 'red' }}>{errors.phone}</Text>}
 
               <TextInput
-                label="Password"
                 placeholder="Enter password"
-                mode="outlined"
                 value={values.password}
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
@@ -126,9 +139,7 @@ export default function AddUser({ onClose }) {
               {touched.password && errors.password && <Text style={{ color: 'red' }}>{errors.password}</Text>}
 
               <TextInput
-                label="Position"
                 placeholder="Enter position"
-                mode="outlined"
                 value={values.position}
                 onChangeText={handleChange('position')}
                 onBlur={handleBlur('position')}
@@ -137,9 +148,7 @@ export default function AddUser({ onClose }) {
               {touched.position && errors.position && <Text style={{ color: 'red' }}>{errors.position}</Text>}
 
               <TextInput
-                label="Salary"
                 placeholder="Enter salary"
-                mode="outlined"
                 value={values.salary}
                 onChangeText={handleChange('salary')}
                 onBlur={handleBlur('salary')}
@@ -148,9 +157,7 @@ export default function AddUser({ onClose }) {
               {touched.salary && errors.salary && <Text style={{ color: 'red' }}>{errors.salary}</Text>}
 
               <TextInput
-                label="Working Days"
                 placeholder="Enter working days (e.g., Sunday-Thursday)"
-                mode="outlined"
                 value={values.workingDays}
                 onChangeText={handleChange('workingDays')}
                 onBlur={handleBlur('workingDays')}
@@ -159,9 +166,7 @@ export default function AddUser({ onClose }) {
               {touched.workingDays && errors.workingDays && <Text style={{ color: 'red' }}>{errors.workingDays}</Text>}
 
               <TextInput
-                label="Working Hours"
                 placeholder="Enter working hours (e.g., 9 AM - 5 PM)"
-                mode="outlined"
                 value={values.workingHours}
                 onChangeText={handleChange('workingHours')}
                 onBlur={handleBlur('workingHours')}
@@ -178,7 +183,7 @@ export default function AddUser({ onClose }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   alignSelf: 'center',
-                  marginTop: height(7),
+                  marginTop: height(4),
                 }}
                 onPress={handleSubmit}
               >
@@ -188,5 +193,6 @@ export default function AddUser({ onClose }) {
           )}
         </Formik>
       </View>
+    </KeyboardAwareScrollView>
   );
 }
