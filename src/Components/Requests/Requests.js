@@ -35,11 +35,10 @@ export default function Requests() {
 
   const handleCancelRequest= async () => {
     try {
-      // Retrieve uid from AsyncStorage
+     
       const uid = await AsyncStorage.getItem('userUID');
       
       if (uid) {
-        // Clear the 'request' array in Firestore
         await updateDoc(doc(db, 'users', uid), {
           request: [],
         });
@@ -59,7 +58,6 @@ export default function Requests() {
       try {
         const uid = await AsyncStorage.getItem('userUID');
 
-        // Check if uid is valid before querying
         if (!uid) {
           console.log("User UID not found in AsyncStorage.");
           return;

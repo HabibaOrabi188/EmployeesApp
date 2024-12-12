@@ -52,8 +52,9 @@ export default function Login() {
 
       navigation.navigate('Home');
     } catch (error) {
-      console.error('Error signing in:', error);
+      // console.error('Error signing in:', error);
       // Handle error messages based on the error code
+      alert('Error logging in. Please try again later.');
       if (error.code === 'auth/user-not-found') {
         alert('User not found. Please register.');
       } else if (error.code === 'auth/wrong-password') {

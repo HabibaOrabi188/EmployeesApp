@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Alert, TextInput, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { width, height, totalSize } from 'react-native-dimension';
 import { Formik } from 'formik';
@@ -44,7 +44,7 @@ export default function AddUser({ onClose }) {
         salary: values.salary,
         days: values.workingDays,
         hours: values.workingHours,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCbU49DD_iYcjSUEXG-Oy7POjJzaMn1GYEZg&s',
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCbU49DD_iYcjSUEXG-Oy7POjJzaMn1GYEZg&s', // Placeholder image URL
         absenceDays: 0,
         earlyLeave: 0,
         lateDays: 0,
@@ -56,7 +56,11 @@ export default function AddUser({ onClose }) {
       onClose();
     } catch (error) {
       console.error('Error adding user:', error);
-      Alert.alert('Failed to add user. Please try again.');
+      if (error.code === 'auth/email-already-in-use') {
+        Alert.alert('This email is already in use. Please choose another one.');
+      } else {
+        Alert.alert('Failed to add user. Please try again.');
+      }
     }
   };
 
